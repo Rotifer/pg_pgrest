@@ -134,6 +134,15 @@ Example Call:
 SELECT *
 FROM
 pgrest.register_update_mouse(p_mouse_id => 4000, p_sex => 'M', p_strain => 'C57BL/6J', p_dob => '2008-10-31');
+cURL Example Call:
+curl -X POST http://127.0.0.1:8080/rpc/register_update_mouse \
+  -H "Content-Type: application/json" \
+  -d '{
+        "p_mouse_id": 4031,
+        "p_sex": "M",
+        "p_strain": "FVB/NJ",
+        "p_dob": "2009-01-09"
+      }'
 $$;
 
 
