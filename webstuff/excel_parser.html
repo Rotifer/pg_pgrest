@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel and Convert to JSON</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h1>Upload Excel File and Convert to JSON</h1>
+
+    <!-- File input form -->
+    <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" />
+
+    <br><br>
+    <!-- Button to trigger conversion -->
+    <button onclick="convertToJSON()">Convert to JSON</button>
+
+    <h2>Output (JSON):</h2>
+    <pre id="jsonOutput"></pre>
+
+    <script>
+        let excelData = null;
+
+        // Function to handle the file input
+        document.getElementById("fileInput").addEventListener("change", handleFile, false);
+
+        function handleFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                // Read the file as binary string
+                reader.readAsBinaryString(file);
+
+                reader.onload = function(e) {
+                    // Parse the Excel file once loaded
+                    const data = e.target.result;
+                    excelData = XLSX.read(data, { type: 'binary' });
+
+                    // You can check the sheet names (Optional)
+                    console.log("Sheet Names:", excelData.SheetNames);
+                };
+            }
+        }
+
+        // Function to convert the loaded Excel data to JSON
+        function convertToJSON() {
+            if (excelData) {
+                // Get the first sheet from the file
+                const sheetName = excelData.SheetNames[0];
+                const sheet = excelData.Sheets[sheetName];
+
+                // Convert the sheet to JSON format
+                const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+                // Display the JSON result on the webpage
+                document.getElementById('jsonOutput').textContent = JSON.stringify(jsonData, null, 2);
+            } else {
+                alert("Please upload an Excel file first.");
+            }
+        }
+    </script>
+</body>
+</html>
